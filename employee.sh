@@ -2,66 +2,41 @@
 declare -A employees
 
 function add_employee_record() {
-    echo "Enter Employee Name:"
-    read name
-    echo "Enter Employee Number:"
-    read emp_number
-    echo "Enter Telephone Number:"
-    read phone_number
-    employees["$emp_number"]="$name,$phone_number"
-    echo "Employee Record added successfully!"
+   read -p "Enter Employee Name: " name
+    read -p "Enter Employee Number: " emp_number
+    read -p "Enter Telephone Number: " telephone
+    # Check if the employee number already exists
+    if grep -q "^.*:$emp_number:.*$" employee_records.txt; then
+        echo "Employee Number $emp_number already exists. Cannot create duplicate records."
+    else
+        # Append the new record to the file
+        echo "$name:$emp_number:$telephone" >> employee_records.txt
+        echo "Employee Record created successfully!"
+    fi
 }
 
 function delete_employee_record() {
-    echo "Enter Employee Number to delete:"
-    read emp_number
-
-    if [[ ${employees["$emp_number"]} ]]; then
-        unset employees["$emp_number"]
-        echo "Employee Record deleted successfully!"
-    else
-        echo "Employee Number not found in the record!"
-    fi
+    read -p "Enter the Employee Number to delete: " emp_number
+    # Use temporary file to store the updated records
+    grep -v "^.*:$emp_number:.*$" employee_records.txt > temp.txt
+    mv temp.txt employee_records.txt
+    echo "Employee Record deleted successfully!"
 }
 
 function search_employee_record() {
-    echo "Enter Employee Number to search:"
-    read emp_number
-
-    if [[ ${employees["$emp_number"]} ]]; then
-        echo "Employee Name: ${employees["$emp_number"]%,*}"
-        echo "Telephone Number: ${employees["$emp_number"]#*,}"
-    else
-        echo "Employee Number not found in the record!"
-    fi
+    read -p "Enter the Employee Number to search: " emp_number
+    grep "^.*:$emp_number:.*$" employee_records.txt
 }
 
 function list_all_records() {
-    if [[ ${#employees[@]} -eq 0 ]]; then
-        echo "Employee Record is empty!"
-    else
-        echo "Employee Records:"
-        for emp_number in "${!employees[@]}"; do
-            echo "Employee Number: $emp_number"
-            echo "Employee Name: ${employees["$emp_number"]%,*}"
-            echo "Telephone Number: ${employees["$emp_number"]#*,}"
-            echo "-------------------------"
-        done
-    fi
+    sed 's/:/ /g' employee_records.txt
 }
 
 function sort_records() {
-    if [[ ${#employees[@]} -eq 0 ]]; then
-        echo "Employee Record is empty!"
-    else
-        echo "Sorted Employee Records:"
-        for emp_number in $(echo "${!employees[@]}" | tr ' ' '\n' | sort); do
-            echo "Employee Number: $emp_number"
-            echo "Employee Name: ${employees["$emp_number"]%,*}"
-            echo "Telephone Number: ${employees["$emp_number"]#*,}"
-            echo "-------------------------"
-        done
-    fi
+    # sort -t ':' -k 2 employee_records.txt > temp.txt
+    sort -t ':' -k2n employee_records.txt > temp.txt
+    mv temp.txt employee_records.txt
+    echo "Record Sorted Successfully!!!"
 }
 
 while true; do
