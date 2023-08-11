@@ -1,5 +1,5 @@
 #!/bin/bash
-declare -A employees
+
 
 function add_employee_record() {
    read -p "Enter Employee Name: " name
