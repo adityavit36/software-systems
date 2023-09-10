@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest14.c
+Name : 14.c
 Author : Aditya Sharma
 Description : Write a program to find the type of a file.
 a. Input should be taken from command line.

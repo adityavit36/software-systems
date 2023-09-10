@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest21.c
+Name : 21.c
 Author : Aditya Sharma
 Description : Write a program, call fork and print the parent and child process id.
 Date: 7th Sept, 2023.

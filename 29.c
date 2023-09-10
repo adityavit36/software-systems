@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest29.c
+Name : 29.c
 Author : Aditya Sharma
 Description : Write a C program to get scheduling policy and modify the scheduling policy (SCHED_FIFO,SCHED_RR)
 Date: 7th Sept, 2023.

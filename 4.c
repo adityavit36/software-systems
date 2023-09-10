@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest4.c
+Name : 4.c
 Author : Aditya Sharma
 Description : Write a program to open an existing file with read write mode. Try O_EXCL flag also. 
 Date: 24th Aug, 2023.

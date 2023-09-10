@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest20.c
+Name : 20.c
 Author : Aditya Sharma
 Description : Write a C program to find priority of program and modifying it with nice command
 Date: 7th Sept, 2023.

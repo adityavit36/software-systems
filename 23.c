@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest23.c 
+Name : 23.c 
 Author : Aditya Sharma
 Description : Write a program to create a Zombie state of the running program.
 Date: 7th Sept, 2023.

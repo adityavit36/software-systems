@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest24.c
+Name : 24.c
 Author : Aditya Sharma
 Description : Write a program to create an orphan process.
 Date: 7th Sept, 2023.

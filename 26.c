@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest26.c
+Name : 26.c
 Author : Aditya Sharma
 Description : Write a c program to execute an executable program. 
 Date: 7th Sept, 2023.

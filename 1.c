@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest1.c
+Name : 1.c
 Author : Aditya Sharma
 Description :Create the following types of a files using (i) shell command (ii) system call
 a. soft link (symlink system call)

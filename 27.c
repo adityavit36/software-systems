@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest27.c
+Name : 27.c
 Author : Aditya Sharma
 
 Description : Write a program to execute ls -Rl by the following system calls

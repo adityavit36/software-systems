@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest3.c
+Name : 3.c
 Author : Aditya Sharma
 Description : 
 Date: 24th Aug, 2023.

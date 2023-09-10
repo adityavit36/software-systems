@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest12.c
+Name : 12.c
 Author : Aditya Sharma
 Description : Write a program to find out the opening mode of a file. Use fcntl
 Date: 24th Aug, 2023.

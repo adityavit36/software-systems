@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest10.c
+Name : 10.c
 Author : Aditya Sharma
 Description : Write a program to open a file with read write mode, write 10 bytes, move the file pointer by 10
 bytes (use lseek) and write again 10 bytes.

@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest19.c
+Name : 19.c
 Author : Aditya Sharma
 Description : Write a program to find out time taken to execute getpid system call. Use time stamp counter.
 Date: 7th Sept, 2023.

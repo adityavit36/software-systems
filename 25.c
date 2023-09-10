@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest25.c 
+Name : 25.c 
 Author : Aditya Sharma
 Description : Write a program to create three child processes. The parent should wait for a particular child (use
 waitpid system call).

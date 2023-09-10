@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest28.c
+Name : 28.c
 Author : Aditya Sharma
 Description : Write a program to get maximum and minimum real time priority.
 Date: 7th Sept, 2023.

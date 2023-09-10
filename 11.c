@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest11.c
+Name : 11.c
 Author : Aditya Sharma
 Description : Write a program to open a file, duplicate the file descriptor and append the file with both the
 descriptors and check whether the file is updated properly or not.

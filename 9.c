@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest9.c
+Name : 9.c
 Author : Aditya Sharma
 Description : Write a program to print the following information about a given file.
 a. inode

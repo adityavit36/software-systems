@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest18.c
+Name : 18.c
 Author : Aditya Sharma
 Description : Write a program to perform Record locking.
 a. Implement write lock

@@ -1,6 +1,6 @@
 /*
 ============================================================================
-Name : Quest30.c
+Name : 30.c
 Author : Aditya Sharma
 Description : To run a script at a specific time using a Daemon process.
 Date: 7th Sept, 2023.
