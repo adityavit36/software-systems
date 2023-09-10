@@ -1,3 +1,18 @@
+/*
+============================================================================
+Name : Quest11.c
+Author : Aditya Sharma
+Description : Write a program to open a file, duplicate the file descriptor and append the file with both the
+descriptors and check whether the file is updated properly or not.
+a. use dup
+b. use dup2
+c. use fcntl
+
+Date: 24th Aug, 2023.
+============================================================================
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +35,7 @@ int main() {
         close(fd);
         return 1;
     }
+ 
     int dup_fd2 = dup2(fd,5);
     if (dup_fd2 == -1) {
         printf("File Duplicate Error");
@@ -27,21 +43,22 @@ int main() {
         return 1;
     }
 
-    printf("File Descriptor %d and Duplicate file Descriptor %d and Another Duplicate File Descriptor %d ", fd, dup_fd, dup_fd2);
-
+    printf("File Descriptor %d and Duplicate file Descriptor %d and Another Duplicate File Descriptor %d\n", fd, dup_fd, dup_fd2);
+//    lseek(fd,0,SEEK_SET);
     if (write(fd, content, strlen(content)) == -1) {
         printf("Write Cannot Happen");
         close(fd);
         close(dup_fd);
         return 1;
     }
-
+  //  lseek(dup_fd,0,SEEK_SET);
     if (write(dup_fd, content, strlen(content)) == -1) {
         printf("Write Cannot Happen by Duplicate File descriptor");
         close(fd);
         close(dup_fd);
         return 1;
     }
+   // lseek(dup_fd2,0,SEEK_SET);
     if (write(dup_fd2, content, strlen(content)) == -1) {
         printf("Write Cannot Happen");
         close(fd);
@@ -57,11 +74,8 @@ int main() {
     if (file == NULL)  return 1;
 
     char buffer[256];
-    while (fgets(buffer, sizeof(buffer), file)) 
-        printf("%s", buffer);
+    while (fgets(buffer, sizeof(buffer), file)) printf("%s", buffer);
 
     fclose(file);
-
     return 0;
 }
-

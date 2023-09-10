@@ -1,46 +1,45 @@
+/*
+============================================================================
+Name : Quest10.c
+Author : Aditya Sharma
+Description : Write a program to open a file with read write mode, write 10 bytes, move the file pointer by 10
+bytes (use lseek) and write again 10 bytes.
+a. check the return value of lseek
+b. open the file with od and check the empty spaces in between the data.
+Date: 24th Aug, 2023.
+============================================================================
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 
-int main() {   // Open the file in read-write mode or create if it doesn't exist
-    int fileDescriptor = open("data.txt", O_RDWR | O_CREAT);
+int main() {   
+    int fd = open("data.txt", O_RDWR | O_CREAT);
     
-    if (fileDescriptor == -1) {
-        printf("Error opening the file \n");
+    if (fd == -1) {
+        perror("Error in Opening Files");
         return 1;
     }
 
-    // Write 10 bytes to the file
-    const char* data1 = "abcdefghij";
-    ssize_t bytesWritten1 = write(fileDescriptor, data1, 10);
+    char data1[] = "ABCDEFGHIJ";
+    write(fd, data1, sizeof(data1) - 1); 
 
-    if (bytesWritten1 != 10) {
-        printf("Error writing data to the file\n");
-        close(fileDescriptor);
-        return 1;
-    } // Move the file pointer by 10 bytes using lseek
- 
-    off_t newPosition = lseek(fileDescriptor, 10, SEEK_CUR);
+    
+    off_t seek_offset = lseek(fd, 10, SEEK_CUR);
+    printf("lseek return value: %ld\n", seek_offset);
 
-    if (newPosition == -1) {
-        printf("Error using lseek\n");
-        close(fileDescriptor);
-        return 1;
-    }    // Write another 10 bytes to the file
 
-    const char* data2 = "ABCDEFGHIJ";
-    ssize_t bytesWritten2 = write(fileDescriptor, data2, 10);
+    const char data2[] = "abcd4fghij";
+    write(fd, data2, sizeof(data2) - 1); 
 
-    if (bytesWritten2 != 10) {
-        printf("Error writing data to the file");
-        close(fileDescriptor);
-        return 1;
-    }
+    close(fd);
 
-    // Close the file
-    close(fileDescriptor);
+    
+    char temp[100];
+    snprintf(temp, sizeof(temp), "od -c %s", "data.txt");
+    system(temp);
 
     return 0;
 }
-

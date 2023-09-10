@@ -1,3 +1,16 @@
+/*
+============================================================================
+Name : Quest8.c
+Author : Aditya Sharma
+Description :Write a program to open a file in read only mode, read line by line and display each line as it is read.
+Close the file when end of file is reached.
+
+Date: 24th Aug, 2023.
+============================================================================
+*/
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,22 +19,20 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
         return EXIT_FAILURE;
     }
+    FILE *file = fopen(argv[1], "r");
 
-    FILE *file = fopen(argv[1], "r"); // Open the file in read-only mode
     if (file == NULL) {
-      //  perror("fopen");
-        return EXIT_FAILURE;
+        perror("Error opening file");
+        return 1;
     }
 
-    char buffer[1024]; // Buffer to hold each line
-    while (fgets(buffer, sizeof(buffer), file) != NULL)
-        printf("%s", buffer); // Display the read line
-    
-    if (feof(file)) {
-        printf("End of file reached.\n");
+    // Read and display each line until the end of the file is reached
+    char line[256];  // Assuming a maximum line length of 255 characters
+    while (fgets(line, sizeof(line), file) != NULL) {
+        printf("%s", line);
     }
 
-    fclose(file); // Close the file
-    return EXIT_SUCCESS;
+    // Close the file
+    fclose(file);
+    return 0;
 }
-

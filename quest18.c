@@ -1,3 +1,19 @@
+/*
+============================================================================
+Name : Quest18.c
+Author : Aditya Sharma
+Description : Write a program to perform Record locking.
+a. Implement write lock
+b. Implement read lock
+Create three records in a file. Whenever you access a particular record, first lock it then modify/access
+to avoid race condition.
+
+Date: 24th Aug, 2023.
+============================================================================
+*/
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -81,6 +97,7 @@ int main() {
 	 lseek(fd, recordNum * sizeof(struct Record), SEEK_SET);
 	 write(fd, &records[recordNum], sizeof(struct Record));
 	 printf("Record modified.\n");
+	 if (getchar())
 	 releaseLock(fd, recordNum);
     }
     if (choice == 0) {
@@ -92,6 +109,7 @@ int main() {
 	 lseek(fd, recordNum * sizeof(struct Record), SEEK_SET);
 	 read(fd, &records[recordNum], sizeof(struct Record));
          printf("Record %d: ID = %d, Data = %s\n", recordNum, records[recordNum].id, records[recordNum].data);
+	 if (getchar())
 	 releaseLock(fd, recordNum);
     }
     if (choice == 2) 

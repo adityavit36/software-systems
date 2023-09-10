@@ -1,3 +1,15 @@
+/*
+============================================================================
+Name : Quest16.c
+Author : Aditya Sharma
+Description : Write a program to perform mandatory locking.
+a. Implement write lock
+b. Implement read lock
+
+Date: 24th Aug, 2023.
+============================================================================
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -5,28 +17,28 @@
 
 int reader_count = 0;
 void acquireWriteLock(int fd) {
-    struct flock fl;
-    fl.l_type = F_WRLCK;   
-    fl.l_whence = SEEK_SET;
-    fl.l_start = 0;
-    fl.l_len = 0;       
-    fl.l_pid = getpid();
+    struct flock write_lock;
+    write_lock.l_type = F_WRLCK;   
+    write_lock.l_whence = SEEK_SET;
+    write_lock.l_start = 0;
+    write_lock.l_len = 0;       
+    write_lock.l_pid = getpid();
 
-    if (fcntl(fd, F_SETLKW, &fl) == -1) {
+    if (fcntl(fd, F_SETLKW, &write_lock) == -1) {
         printf("Error acquiring write lock");
         exit(EXIT_FAILURE);
     }
 }
 
 void acquireReaderLock(int fd) {
-    struct flock fl;
-    fl.l_type = F_RDLCK;
-    fl.l_whence = SEEK_SET;
-    fl.l_start = 0;
-    fl.l_len = 0;
-    fl.l_pid = getpid();
+    struct flock read_lock;
+    read_lock.l_type = F_RDLCK;
+    read_lock.l_whence = SEEK_SET;
+    read_lock.l_start = 0;
+    read_lock.l_len = 0;
+    read_lock.l_pid = getpid();
 
-    if (fcntl(fd, F_SETLKW, &fl) == -1) {
+    if (fcntl(fd, F_SETLKW, &read_lock) == -1) {
         printf("Error acquiring read lock\n");
     }
 
@@ -38,14 +50,14 @@ void acquireReaderLock(int fd) {
 
 
 void releaseLock(int fd) {
-    struct flock fl;
-    fl.l_type = F_UNLCK;
-    fl.l_whence = SEEK_SET;
-    fl.l_start = 0;
-    fl.l_len = 0;
-    fl.l_pid = getpid();
+    struct flock release_lock;
+    release_lock.l_type = F_UNLCK;
+    release_lock.l_whence = SEEK_SET;
+    release_lock.l_start = 0;
+    release_lock.l_len = 0;
+    release_lock.l_pid = getpid();
 
-    if (fcntl(fd, F_SETLK, &fl) == -1) {
+    if (fcntl(fd, F_SETLK, &release_lock) == -1) {
        printf("Error releasing lock");
        exit(EXIT_FAILURE);
     }
@@ -55,8 +67,7 @@ void releaseLock(int fd) {
 }
 
 int main() {
-    const char *filename = "data.txt";
-    int fd = open(filename, O_RDWR | O_CREAT, 0666);
+    int fd = open("data.txt", O_RDWR | O_CREAT, 0666);
     if (fd == -1) {
         printf("Error opening file");
         exit(EXIT_FAILURE);
