@@ -47,20 +47,20 @@ int main() {
         }
         char username[MAX_USERNAME_LENGTH];
         char password[MAX_PASSWORD_LENGTH];
-
         printf("Username: ");
         scanf("%s", username);
         printf("Password: ");
         scanf("%s", password);
-
-        // Send username and password to the server
+        username[strlen(username)]='\0';
+        password[strlen(password)]='\0';
         send(client_socket, username, strlen(username), 0);
         send(client_socket, password, strlen(password), 0);
-
-        char response[100]; // Receive the response from the server
+        char response[100];
+        bzero(username,sizeof(username));
+        bzero(password,sizeof(password));
         if (recv(client_socket, response, sizeof(response), 0) == -1) perror("Error receiving response");
         else  printf("Server response: %s\n", response);
-        char ch = response[6]; //printf("%c\n",ch);
+        char ch = response[6];
         if (ch == 's') {
             if (choice == 1) {
                 int pick;
@@ -114,6 +114,7 @@ int main() {
                     char dept[50];
                     char design[50];
                     char password[50];
+                    char login[50];
                     printf("Enter key for Professor\n");
                     scanf("%d", &key);
                     send(client_socket, &key, sizeof(int), 0);
@@ -133,6 +134,10 @@ int main() {
                     scanf("%s",address);
                     address[strlen(address)]='\0';
                     send(client_socket,address, strlen(address), 0);
+                    printf("Enter login for Professor\n");
+                    scanf("%s",login);
+                    login[strlen(login)]='\0';
+                    send(client_socket,login, strlen(login), 0);
                     printf("Enter Password for Professor\n");
                     scanf("%s", password);
                     password[strlen(password)]='\0';
@@ -202,7 +207,84 @@ int main() {
                 printf("Pick Options from Faculty Menu\n");
                 scanf("%d",&pick);
                 send(client_socket,&pick,sizeof(int),0);
-                if (pick == 6) {
+                if(pick == 1) {
+                   char buffer[80];
+                   printf("Enter the Course id\n");
+                   scanf("%s",buffer);
+                   buffer[strlen(buffer)] = '\0';
+                   send(client_socket,buffer,strlen(buffer),0);
+                }
+                else if (pick == 2) {
+                    printf("Add New Course\n");
+                    char CourseId[50];
+                    char course_name[50];
+                    int seats;
+                    char dept[50];
+                    int credits;
+                    int seats_available;
+                    printf("Enter CourseId for Course\n");
+                    scanf("%s",CourseId);
+                    CourseId[strlen(CourseId)]='\0';
+                    send(client_socket, CourseId, strlen(CourseId), 0);
+                    printf("Enter Name of Course\n");
+                    scanf("%s",course_name);
+                    course_name[strlen(course_name)]='\0';
+                    send(client_socket,course_name, strlen(course_name), 0);
+                    printf("Enter Department for Professor\n");
+                    scanf("%s", dept);
+                    dept[strlen(dept)]='\0';
+                    send(client_socket,dept, strlen(dept), 0);
+                    printf("Enter seats for Course\n");
+                    scanf("%d", &seats);
+                    send(client_socket,&seats,sizeof(int), 0);
+                    printf("Enter credits for Course\n");
+                    scanf("%d", &credits);
+                    send(client_socket,&credits,sizeof(int), 0);
+                }
+                else if (pick == 3) {
+                    printf("Enter Course id of the Courses to be removed\n");
+                    char login[80];
+                    scanf("%s",login);
+                    login[strlen(login)]='\0';
+                    send(client_socket,login,strlen(login),0);
+                }
+                else if (pick == 4) {
+                    printf("Update Course Details, Enter Course id\n");
+                    char buffer[80];
+                    scanf("%s",buffer);
+                    buffer[strlen(buffer)] = '\0';
+                    int option;
+                    printf("\nEnter Option 1. Course Name\n2. Department Name\n3. Seats\n4.Credits\n");
+                    scanf("%d",&option);
+                    send(client_socket,&option,sizeof(int),0);
+                    send(client_socket,buffer,strlen(buffer),0);
+                    if (option < 3) {
+                        char lp[80];
+                        printf("Enter Value in string\n");
+                        scanf("%s",lp);
+                        lp[strlen(lp)]='\0';
+                        send(client_socket,lp,strlen(lp),0);
+                    }
+                    else {
+                        int n;
+                        scanf("%d",&n);
+                        send(client_socket,&n,sizeof(int),0);
+                    }
+                }
+                else if(pick == 5) {
+                    printf("Password Change Faculty\n");
+                    char pword[80];
+                    char login[80];
+                    printf("Enter login of Prof\n");
+                    scanf("%s",login);
+                    login[strlen(login)] = '\0';
+                    send(client_socket,login,strlen(login),0);
+                    printf("Enter password of Prof\n");
+                    scanf("%s", pword);
+                    pword[strlen(pword)] = '\0';
+                    send(client_socket,pword,strlen(pword),0);
+                }
+                else if (pick == 6) {
                     close(client_socket);
                     exit(0);
                 }
@@ -214,9 +296,25 @@ int main() {
                 scanf("%d",&pick);
                 send(client_socket,&pick,sizeof(int),0);
                 if (pick == 1) {
+                    char str[80];
+                    printf("Enter Course Id\n");
+                    scanf("%s",str);
+                    str[sizeof(str)]='\0';
+                    send(client_socket,str,strlen(str),0);
                 }
-                else if(pick == 3) {
-                    
+                else if(pick == 2) {
+                    char str[80];
+                    printf("Enter New Course Id\n");
+                    scanf("%s",str);
+                    str[sizeof(str)]='\0';
+                    send(client_socket,str,strlen(str),0);
+                }
+                else if (pick == 3) {
+                    char str[80];
+                    printf("Enter Course Id to be removed from student's database\n");
+                    scanf("%s",str);
+                    str[sizeof(str)]='\0';
+                    send(client_socket,str,strlen(str),0);
                 }
                 else if (pick == 5) {
                     printf("Enter New Password for Student\n");
