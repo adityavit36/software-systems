@@ -55,9 +55,9 @@ int main() {
         password[strlen(password)]='\0';
         send(client_socket, username, strlen(username), 0);
         send(client_socket, password, strlen(password), 0);
-        char response[100];
         bzero(username,sizeof(username));
         bzero(password,sizeof(password));
+        char response[100];
         if (recv(client_socket, response, sizeof(response), 0) == -1) perror("Error receiving response");
         else  printf("Server response: %s\n", response);
         char ch = response[6];
@@ -208,11 +208,11 @@ int main() {
                 scanf("%d",&pick);
                 send(client_socket,&pick,sizeof(int),0);
                 if(pick == 1) {
-                   char buffer[80];
-                   printf("Enter the Course id\n");
-                   scanf("%s",buffer);
-                   buffer[strlen(buffer)] = '\0';
-                   send(client_socket,buffer,strlen(buffer),0);
+                //    char buffer[80];
+                //    printf("Enter the Course id\n");
+                //    scanf("%s",buffer);
+                //    buffer[strlen(buffer)] = '\0';
+                //    send(client_socket,buffer,strlen(buffer),0);
                 }
                 else if (pick == 2) {
                     printf("Add New Course\n");
@@ -315,6 +315,13 @@ int main() {
                     scanf("%s",str);
                     str[sizeof(str)]='\0';
                     send(client_socket,str,strlen(str),0);
+                }
+                else if (pick == 4) {
+                    printf("Enter Course id for course\n");
+                    char cid[80];
+                    scanf("%s",cid);
+                    cid[strlen(cid)]='\0';
+                    send(client_socket,cid,strlen(cid),0);
                 }
                 else if (pick == 5) {
                     printf("Enter New Password for Student\n");
