@@ -7,6 +7,39 @@
 #define MAX_USERNAME_LENGTH 50
 #define MAX_PASSWORD_LENGTH 50
 
+struct Stud {
+    char name[50];
+    char age[50];
+    char key[50];
+    char email[50];
+    char address[50];
+    char active;
+};
+
+struct Prof {
+    char key[MAX_USERNAME_LENGTH];
+    char name[MAX_USERNAME_LENGTH];
+    char department[MAX_PASSWORD_LENGTH];
+    char designation[MAX_USERNAME_LENGTH];
+    char address[MAX_USERNAME_LENGTH];
+};
+
+struct Courses {
+    char courseId[50];
+    char course_name[50];
+    char department[50];
+    int seats;
+    char faculty_id[50];
+    int credits;
+    int seats_available;
+    int deleted; // 0 for not deleted and 1 for deleted
+};
+
+struct student_course {
+    char course_id[80];
+    int deleted;
+};
+
 int main() {
     int client_socket;
     struct sockaddr_in server_addr;
@@ -98,6 +131,10 @@ int main() {
                     scanf("%s", password);
                     password[strlen(password)]='\0';
                     send(client_socket,password, strlen(password), 0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("Student Data Added Successfully\n");
+                    else printf("Student Data Not Added\n");
                 }
                 else if (pick == 2) {
                     char id[100];
@@ -105,6 +142,20 @@ int main() {
                     scanf("%s",id);
                     id[strlen(id)]='\0';
                     send(client_socket,id,strlen(id),0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if (success) {
+                        struct Stud student;
+                        recv(client_socket,&student,sizeof(struct Stud),0);
+                        printf("Student Name:%s\n",student.name);
+                        printf("Student Address:%s\n",student.address);
+                        printf("Student Key: %s\n",student.key);
+                        printf("Student email: %s\n",student.email);
+                        printf("Student age:%s\n",student.age);
+                        printf("Student Active Status: %c\n",student.active);
+                    }
+                    else 
+                        printf("Student Record Not Found\n");
                 }
                 else if(pick == 3) {
                     int key;
@@ -142,6 +193,10 @@ int main() {
                     scanf("%s", password);
                     password[strlen(password)]='\0';
                     send(client_socket,password, strlen(password), 0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if (success) printf("Professor Data Added Successfully\n");
+                    else printf("Professor Data not Added \n");
                 }
                 else if (pick == 4) {
                     printf("Enter Key to view Professor's Profile\n");
@@ -149,6 +204,18 @@ int main() {
                     scanf("%s",act);
                     act[strlen(act)] = '\0';
                     send(client_socket,act,strlen(act),0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) {
+                        struct Prof kl;
+                        recv(client_socket,&kl,sizeof(struct Prof),0);
+                        printf("Key: %s\n",kl.key);
+                        printf("Name: %s\n",kl.name);
+                        printf("Address: %s\n",kl.address);
+                        printf("Department: %s\n",kl.department);
+                        printf("Designation: %s\n",kl.designation);
+                    }
+                    else printf("Professor record not found\n");
                 }
                 else if (pick == 5) {
                     printf("Enter Key to Activate Student\n");
@@ -156,6 +223,10 @@ int main() {
                     scanf("%s",act);
                     act[strlen(act)] = '\0';
                     send(client_socket,act,strlen(act),0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("Student Data Activated Successfully\n");
+                    else printf("Student Data Not Activated\n");
                 }
                 else if (pick == 6) {
                     printf("Enter Key to Deactivate Student\n");
@@ -163,6 +234,10 @@ int main() {
                     scanf("%s",act);
                     act[strlen(act)] = '\0';
                     send(client_socket,act,strlen(act),0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("Student Data Deactivated Successfully\n");
+                    else printf("Student Data Not deactivated\n");
                 }
                 else if (pick == 7) {
                     printf("What do you want to modify in student Details: \n1.Name\n2.Age\n3.Email Id\n4.Address\n");
@@ -179,6 +254,10 @@ int main() {
                     scanf("%s",buffer);
                     buffer[strlen(buffer)] = '\0';
                     send(client_socket,buffer,strlen(buffer),0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("Student Data Modified Successfully\n");
+                    else printf("Student Data Not Modified\n");
                 }
                 else if (pick == 8) {
                     printf("What do you want to modify in Professor Details: \n1.Name\n2.Designation\n3.Department\n4.Address\n");
@@ -195,6 +274,10 @@ int main() {
                     scanf("%s",buffer);
                     buffer[strlen(buffer)] = '\0';
                     send(client_socket,buffer,strlen(buffer),0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("Professor Data Activated Successfully\n");
+                    else printf("Professor Data Not Activated\n");
                 }
                 else if (pick == 9){
                     close(client_socket);
@@ -208,11 +291,6 @@ int main() {
                 scanf("%d",&pick);
                 send(client_socket,&pick,sizeof(int),0);
                 if(pick == 1) {
-                //    char buffer[80];
-                //    printf("Enter the Course id\n");
-                //    scanf("%s",buffer);
-                //    buffer[strlen(buffer)] = '\0';
-                //    send(client_socket,buffer,strlen(buffer),0);
                 }
                 else if (pick == 2) {
                     printf("Add New Course\n");
@@ -240,6 +318,10 @@ int main() {
                     printf("Enter credits for Course\n");
                     scanf("%d", &credits);
                     send(client_socket,&credits,sizeof(int), 0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("New Course Added Successfully\n");
+                    else printf("Course not Added\n");
                 }
                 else if (pick == 3) {
                     printf("Enter Course id of the Courses to be removed\n");
@@ -247,6 +329,10 @@ int main() {
                     scanf("%s",login);
                     login[strlen(login)]='\0';
                     send(client_socket,login,strlen(login),0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("Course deleted Successfully\n");
+                    else printf("Course not deleted\n");
                 }
                 else if (pick == 4) {
                     printf("Update Course Details, Enter Course id\n");
@@ -270,6 +356,10 @@ int main() {
                         scanf("%d",&n);
                         send(client_socket,&n,sizeof(int),0);
                     }
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("Course Details Updated Successfully\n");
+                    else printf("Course Details Not Updated\n");
                 }
                 else if(pick == 5) {
                     printf("Password Change Faculty\n");
@@ -283,6 +373,10 @@ int main() {
                     scanf("%s", pword);
                     pword[strlen(pword)] = '\0';
                     send(client_socket,pword,strlen(pword),0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("Faculty Password Changed Successfully\n");
+                    else printf("Faculty Password not changed\n");
                 }
                 else if (pick == 6) {
                     close(client_socket);
@@ -295,19 +389,16 @@ int main() {
                 printf("Pick Options from Student Menu\n");
                 scanf("%d",&pick);
                 send(client_socket,&pick,sizeof(int),0);
-                if (pick == 1) {
-                    char str[80];
-                    printf("Enter Course Id\n");
-                    scanf("%s",str);
-                    str[sizeof(str)]='\0';
-                    send(client_socket,str,strlen(str),0);
-                }
-                else if(pick == 2) {
+                if(pick == 2) {
                     char str[80];
                     printf("Enter New Course Id\n");
                     scanf("%s",str);
                     str[sizeof(str)]='\0';
                     send(client_socket,str,strlen(str),0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("Course Added Successfully\n");
+                    else printf("Course not added\n");
                 }
                 else if (pick == 3) {
                     char str[80];
@@ -315,6 +406,10 @@ int main() {
                     scanf("%s",str);
                     str[sizeof(str)]='\0';
                     send(client_socket,str,strlen(str),0);
+                    int success;
+                    recv(client_socket,&success,sizeof(int),0);
+                    if(success) printf("Course removed Successfully\n");
+                    else printf("Course not removed\n");
                 }
                 else if (pick == 4) {
                     printf("Enter Course id for course\n");

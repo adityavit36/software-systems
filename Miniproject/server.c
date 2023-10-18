@@ -46,6 +46,12 @@ struct Stud {
     char active;
 };
 
+int server_socket, client_socket;
+struct Stud student_outside;
+struct Prof prof_outside;
+struct Courses course_outside;
+struct student_course std_course;
+
 int authenticate_user(const char *uname, const char *pword, int choice) {
     if (choice == 1) { // Admin Authetication
         int file_descriptor;
@@ -193,8 +199,6 @@ int activate_student(const char *login) {
 
 int change_student_password(const char *login,const char *pword) {
     int flag = 0;
-    if (!search_key(login))
-       return 0;
     int fd = open("Studid.txt", O_RDWR);
     if (fd == -1) {
         perror("Error opening the file");
@@ -449,74 +453,82 @@ int modify_faculty(const char *login,int option, const char *pword) {
     return flag;
 }
 
-void view_student(const char *buffer) {
+int view_student(const char *buffer) {
     int fd = open("student.txt", O_RDONLY);
     if (fd == -1) {
         perror("Error opening the file");
-        return;
+        return 0;
     }
 
     struct Stud searchPerson;
     char searchName[100];
     int found = 0;
     ssize_t bytesRead;
-
+    bzero(student_outside.name,sizeof(student_outside.name));
+    bzero(student_outside.email,sizeof(student_outside.email));
+    bzero(student_outside.address,sizeof(student_outside.address));
+    bzero(student_outside.key,sizeof(student_outside.key));
+    bzero(student_outside.name,sizeof(student_outside.name));
+    bzero(student_outside.age,sizeof(student_outside.age));
     while ((bytesRead = read(fd, &searchPerson, sizeof(struct Stud))) > 0) {
         if (bytesRead != sizeof(struct Stud)) {
             perror("Error reading from the file");
             close(fd);
-            return;
+            return 0;
         } 
         if (strcmp(searchPerson.key, buffer) == 0) {//  found = 1;
             printf("Record found:\n");
-            printf("Key: %s\n", searchPerson.key);
-            printf("Name: %s\n", searchPerson.name);
-            printf("Email: %s\n", searchPerson.email);
-            printf("Age: %s\n", searchPerson.age);
-            printf("Address: %s\n", searchPerson.address);
-            printf("Active Status: %c\n", searchPerson.active);
+            strcpy(student_outside.key,searchPerson.key);
+            strcpy(student_outside.name,searchPerson.name);
+            strcpy(student_outside.email, searchPerson.email);
+            strcpy(student_outside.age, searchPerson.age);
+            strcpy(student_outside.address, searchPerson.address);
+            student_outside.active=searchPerson.active;
             found = 1;
             break;
         }
     }
-    if (!found) printf("Record not found.\n");
+    
     close(fd);
-    return;
+    return found;
 }
 
-void view_faculty(const char *buffer) {
+int view_faculty(const char *buffer) {
+    int flag = 0;
     int fd = open("faculty.txt", O_RDONLY);
     if (fd == -1) {
         perror("Error opening the file");
-        return;
+        return 0;
     }
 
     struct Prof searchPerson;
     char searchName[100];
     int found = 0;
     ssize_t bytesRead;
-
-    while ((bytesRead = read(fd, &searchPerson, sizeof(struct Prof))) > 0) {
-        if (bytesRead != sizeof(struct Prof)) {
+    bzero(prof_outside.key,sizeof(prof_outside.key));
+    bzero(prof_outside.name,sizeof(prof_outside.name));
+    bzero(prof_outside.department,sizeof(prof_outside.department));
+    bzero(prof_outside.address,sizeof(prof_outside.address));
+    bzero(prof_outside.designation,sizeof(prof_outside.designation));
+    while((bytesRead = read(fd, &searchPerson, sizeof(struct Prof))) > 0) {
+        if(bytesRead != sizeof(struct Prof)) {
             perror("Error reading from the file");
             close(fd);
-            return;
+            return 0;
         } 
-        if (strcmp(searchPerson.key, buffer) == 0) {
+        if(strcmp(searchPerson.key, buffer) == 0) {
             printf("Record found:\n");
-            printf("Key: %s\n", searchPerson.key);
-            printf("Name: %s\n", searchPerson.name);
-            printf("designation: %s\n", searchPerson.department);
-            printf("address: %s\n", searchPerson.address);
-            printf("designation: %s\n", searchPerson.designation);
+            strcpy(prof_outside.key, searchPerson.key);
+            strcpy(prof_outside.name, searchPerson.name);
+            strcpy(prof_outside.department, searchPerson.department);
+            strcpy(prof_outside.address, searchPerson.address);
+            strcpy(prof_outside.designation, searchPerson.designation);
             found = 1;
             break;
         }
     }
-
-    if (!found) printf("Record not found.\n");
     close(fd);
-    return;
+    return found;
 }
 
 int add_course(const char* id,const char* name,const char* dept, int seats, int credits,const char* login) {
@@ -542,12 +554,12 @@ int add_course(const char* id,const char* name,const char* dept, int seats, int 
     return flag;
 }
 
-int view_course(const char* id) {
+void view_course(const char* id) {
     int flag = 0;
     int fd = open("course.txt", O_RDONLY);
     if (fd == -1) {
         perror("Error opening the file");
-        return 0;
+        return;
     }
     struct Courses searchPerson;
     ssize_t bytesRead;
@@ -555,22 +567,20 @@ int view_course(const char* id) {
         if (bytesRead != sizeof(struct Courses)) {
             perror("Error reading from the file");
             close(fd);
-            return 0;
-        } 
+            return;
+        }
         if (strcmp(searchPerson.faculty_id, id) == 0) {//  found = 1;
-            flag = 1;
-            printf("Course Id: %s\n",searchPerson.courseId);
             printf("Course Name: %s\n",searchPerson.course_name);
+            printf("Course id: %s\n",searchPerson.courseId);
             printf("Department: %s\n",searchPerson.department);
-            printf("Total Number of Seats: %d\n",searchPerson.seats);
-            printf("Course Credits:  %d\n",searchPerson.credits);
-            printf("Number of Seats Available in Course: %d\n",searchPerson.seats_available);
-            printf("Status of Course 0 for active and 1 means inactive: %d\n",searchPerson.deleted);
-            break;
+            printf("Status of Course: %d\n",searchPerson.deleted);
+            printf("Total Seats in Course: %d\n",searchPerson.seats);
+            printf("Total Seats available in Course: %d\n",searchPerson.seats_available);
         }
     }
+    send(client_socket,&flag,sizeof(int),0);
     close(fd);
-    return flag;
+    return;
 }
 
 int modify_course(const char *login, int option, const char* str, int val) {
@@ -627,9 +637,9 @@ int delete_course(const char* login) {
         return flag;
 }
 
-
-void view_enroll(const char* login, const char* buffer) {
+void view_enroll(const char* login) {
     struct student_course user;
+    int flag = 0;
     char filename[100];
     sprintf(filename, "%s.txt", login);
     int fd = open(filename, O_RDWR | O_CREAT | O_APPEND, 0666); // Create the file with write permissions
@@ -643,11 +653,8 @@ void view_enroll(const char* login, const char* buffer) {
             perror("Error reading from the file");
             close(fd);
         }    //printf("Inside Loop\n");
-        if(strcmp(searchPerson.course_id, buffer) == 0) {
-            printf("Course id:%s \n",searchPerson.course_id);
-            printf("Status of course: %d \n",searchPerson.deleted);
-            break;
-        }
+        printf("Course id: %s\n",searchPerson.course_id);
+        printf("Status of Course: %d\n",searchPerson.deleted);
     }
     close(fd);
     return;
@@ -721,9 +728,9 @@ int enroll_course(const char* login, const char* buffer) {
                 }
                 if(strcmp(course.courseId , buffer) == 0) {
                     flag = 1;
-                    printf("Seats Available before: %d\n",course.seats_available);
+                  //  printf("Seats Available before: %d\n",course.seats_available);
                     course.seats_available = course.seats_available - 1;
-                    printf("Seats Available after: %d\n",course.seats_available);
+                  //  printf("Seats Available after: %d\n",course.seats_available);
                     lseek(fd1, -1 * sizeof(struct Courses),SEEK_CUR);
                     write(fd1,&course,sizeof(struct Courses));
                     break;
@@ -772,9 +779,9 @@ int deenroll_course(const char* login,const char* buffer) {
             }
             if(strcmp(course.courseId, buffer) == 0) {
                 flag = 1;
-                printf("Seats Available before: %d\n",course.seats_available);
+               // printf("Seats Available before: %d\n",course.seats_available);
                 course.seats_available = course.seats_available + 1;
-                printf("Seats Available after: %d\n",course.seats_available);
+               // printf("Seats Available after: %d\n",course.seats_available);
                 lseek(fd1, -1 * sizeof(struct Courses),SEEK_CUR);
                 write(fd1,&course,sizeof(struct Courses));
                 break;
@@ -846,7 +853,6 @@ void view_enroll_course(const char* login, const char *buffer) {
 }
 
 int main(void) {
-    int server_socket, client_socket;
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
 
@@ -945,6 +951,7 @@ int main(void) {
                     char addr[50];
                     char pword[50];
                     char buffer[50];
+                    int success = 0;
                     recv(client_socket, &key, sizeof(int), 0);
                     recv(client_socket, &age_student, sizeof(int), 0);
                     recv(client_socket,buffer, sizeof(buffer), 0);
@@ -962,15 +969,22 @@ int main(void) {
                     bzero(user_key,sizeof(user_key));
                     sprintf(user_key+strlen(user_key), "%d", key);
                     if(add_student(key,name,age_student,email,addr,pword)) {
-                        printf("Data Added Successfully\n");
+                       success = 1;
+                       send(client_socket,&success,sizeof(int),0);
                     }
-                    else printf("Student Data Already Exists\n");
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 2) {
                     printf("View Student Details\n");
                     char buffer[80];
+                    int success = 0;
                     recv(client_socket,buffer,sizeof(buffer),0);
-                    view_student(buffer);
+                    if(view_student(buffer)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                        send(client_socket,&student_outside,sizeof(struct Stud),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 3) {
                     printf("Add Faculty\n");
@@ -1001,27 +1015,46 @@ int main(void) {
                     bzero(buffer,sizeof(buffer));
                     recv(client_socket, buffer, sizeof(buffer), 0);
                     strcpy(pword,buffer);
-                    if(add_faculty(key,name,login,design,dept,addr,pword)) printf("Professor Data Added Successfully\n");
+                    int success = 0;
+                    if(add_faculty(key,name,login,design,dept,addr,pword)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 4) {
                     char buffer[80];
                     printf("View Faculty Details\n"); 
                     recv(client_socket,buffer,sizeof(buffer),0);
-                    view_faculty(buffer);
+                    int success = 0;
+                    if(view_faculty(buffer)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                        send(client_socket,&prof_outside,sizeof(struct Prof),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 5) {
                     char buffer[80];
                     recv(client_socket,buffer,sizeof(buffer),0);
                     printf("Activate Student Id\n");
-                    if(activate_student(buffer)) printf("Student Data Activated Successfully\n");
-                    else printf("Student Data Not Activated\n");
+                    int success = 0;
+                    if(activate_student(buffer)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 6) {
                     printf("Block Student id\n");
                     char buffer[80];
                     recv(client_socket,buffer,sizeof(buffer),0);
-                    if(block_student(buffer)) printf("Student Data Blocked Successfully\n");
-                    else printf("Student Data Not Activated\n");
+                    int success = 0;
+                    if(block_student(buffer)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 7) {
                     printf("Modify Student Details\n");
@@ -1036,8 +1069,12 @@ int main(void) {
                     recv(client_socket,buffer,sizeof(buffer),0);
                     strcpy(ans,buffer);
                     bzero(buffer,sizeof(buffer));
-                    if (modify_student(data,option,ans)) printf("Student Data Modified Successfully\n");
-                    else printf("Student Data Not Modified\n");
+                    int success = 0;
+                    if (modify_student(data,option,ans)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 8) {
                     printf("Modify Faculty details\n");
@@ -1051,8 +1088,12 @@ int main(void) {
                     bzero(buffer,sizeof(buffer));
                     recv(client_socket,buffer,sizeof(buffer),0);
                     strcpy(ans,buffer); // modi
-                    if (modify_faculty(data,option,ans)) printf("Faculty Data Modified Successfully\n");
-                    else printf("Faculty Data Not Modified\n");
+                    int success = 0;
+                    if (modify_faculty(data,option,ans)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    } 
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 9) {
                     printf("Logout and Exit\n");
@@ -1066,9 +1107,6 @@ int main(void) {
                 int pick;
                 recv(client_socket, &pick, sizeof(int), 0);
                 if (pick == 1) {
-                    //char buffer[80];
-                    //recv(client_socket,buffer, sizeof(buffer), 0);
-                  //  printf("%s\n",buffer);
                     view_course(user_name);
                 }
                 else if (pick == 2) {
@@ -1091,15 +1129,23 @@ int main(void) {
                     recv(client_socket, &seats, sizeof(int), 0);
                     recv(client_socket, &credits, sizeof(int), 0);
                     seats_available = seats;
-                    if(add_course(courseid,course_name,dept,seats,credits,user_name)) printf("Course Added Succesfully\n");
-                    else printf("Course Not Added\n");
+                    int success = 0;
+                    if(add_course(courseid,course_name,dept,seats,credits,user_name)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 3) {
                     char buffer[80];
                     recv(client_socket,buffer,sizeof(buffer),0);
-                    if(delete_course(buffer)) printf("Required Course is Deleted From Catalog\n");
-                    else printf("Required Course is not deleted\n");
-                }   
+                    int success = 0;
+                    if(delete_course(buffer)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
+                }
                 else if (pick == 4) {
                     char buffer[80];
                     char login[80];
@@ -1115,8 +1161,12 @@ int main(void) {
                        bzero(buffer,sizeof(buffer));
                     }
                     else recv(client_socket,&val,sizeof(int),0);
-                    if(modify_course(login,option,str,val)) printf("Course Modified Successfully\n");
-                    else printf("Course Not Modified\n");
+                    int success = 0;
+                    if(modify_course(login,option,str,val)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 5) {
                     char buffer[80];
@@ -1129,8 +1179,12 @@ int main(void) {
                     recv(client_socket,buffer,sizeof(buffer),0);
                     strcpy(pword,buffer);
                     bzero(buffer,sizeof(buffer));
-                    if (change_faculty_password(login, pword)) printf("Faculty Password Changed Sucessfully\n");
-                    else printf("Faculty Password not Changed\n");
+                    int success = 0;
+                    if (change_faculty_password(login, pword)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 6) {
                     flag = 1;
@@ -1142,22 +1196,26 @@ int main(void) {
             else if (choice == 3) {
                 int pick;
                 recv(client_socket, &pick, sizeof(int), 0);
-                if (pick == 1) {
-                    char buffer[80];
-                    recv(client_socket,buffer,sizeof(buffer),0);
-                    view_enroll(user_name,buffer);
-                }
+                if (pick == 1) view_enroll(user_name);
                 else if (pick == 2) {
                     char buffer[80];
                     recv(client_socket,buffer,sizeof(buffer),0);
-                    if(enroll_course(user_name,buffer)) printf("Course Enrolled Successfully\n");
-                    else printf("Course not Enrolled\n");
+                    int success = 0;
+                    if(enroll_course(user_name,buffer)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 3) {
                     char buffer[80];
                     recv(client_socket,buffer,sizeof(buffer),0);
-                    if(deenroll_course(user_name,buffer)) printf("Course Removed Successfully\n");
-                    else printf("Course not removed\n");
+                    int success = 0;
+                    if(deenroll_course(user_name,buffer)) {
+                        success = 1;
+                        send(client_socket,&success,sizeof(int),0);
+                    }
+                    else send(client_socket,&success,sizeof(int),0);
                 }
                 else if (pick == 4) {
                     char cid[80];
