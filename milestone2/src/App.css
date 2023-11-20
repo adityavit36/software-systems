@@ -1,0 +1,118 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+/* Add these styles to your App.css or create a separate CSS file for CartList */
+.CartList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px; /* Adjust the padding as needed */
+}
+
+.CartItem {
+  margin-top: 20px;
+  margin-bottom: 20px; /* Adjust the margin as needed */
+  width: 80%; /* Adjust the width of the cart item */
+  max-width: 400px; /* Set a maximum width for the cart item */
+  border: 1px solid #ddd; /* Add a border for better visibility */
+  padding: 10px; /* Add padding to the cart item */
+}
+
+.CartItem img {
+  margin-right: 1rem;
+  max-width: 150px; /* Increase the max width of the image */
+  max-height: 100px; /* Set a max height for the image */
+  object-fit: contain; /* Maintain the aspect ratio */
+}
+
+.QuantityButtons {
+  display: flex;
+  align-items: center;
+}
+
+.QuantityButtons button {
+  background-color: #28a745; /* Bootstrap success color */
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.TotalPrice {
+  font-weight: bold;
+  margin-top: 1rem; /* Add margin-top as needed */
+}
+
+.CartTotal {
+  font-size: 1.125rem; /* Bootstrap heading size */
+  font-weight: bold;
+  margin-top: 1.25rem; /* Adjust margin-top as needed */
+}
+
+.magnify-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.magnify-image {
+  width: 100%;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.magnify-image:hover {
+  transform: scale(1.5); /* You can adjust the scale factor as needed */
+}
+/* App.css */
+.container {
+  min-height: 100vh;
+}
+
+.product-item .btn {
+  background-color: #007bff; /* Bootstrap primary color */
+  color: #fff; /* White text */
+  border: 1px solid #007bff; /* Border color */
+  transition: background-color 0.3s, color 0.3s; /* Add smooth transition for color changes */
+
+  /* Additional styles */
+  padding: 10px 20px;
+  margin-top: 10px;
+}
+
+.product-item .btn:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  color: #fff; /* White text on hover */
+}
+
+.product-item .btn-details {
+  background-color: #28a745; /* Bootstrap success color for details button */
+  border-color: #28a745; /* Border color */
+}
+
+.product-item .btn-details:hover {
+  background-color: #218838; /* Darker shade on hover */
+  color: #fff; /* White text on hover */
+}

@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.shopping-card {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fb61ae; /* Replace with Bootstrap background utility classes */
+  padding: 20px 30px; /* Replace with Bootstrap padding utility classes */
+}
+
+.product-item {
+  padding: 40px;
+  transition: transform 0.3s; /* Retain the smooth transition for the transform property */
+}
+
+.product-item:hover {
+  transform: scale(1.05);
+}
