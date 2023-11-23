@@ -86,6 +86,7 @@
 .magnify-image:hover {
   transform: scale(1.5); /* You can adjust the scale factor as needed */
 }
+
 /* App.css */
 .container {
   min-height: 100vh;
@@ -104,7 +105,7 @@
 
 .product-item .btn:hover {
   background-color: #0056b3; /* Darker shade on hover */
-  color: #fff; /* White text on hover */
+  color: #ebe5e5; /* White text on hover */
 }
 
 .product-item .btn-details {
@@ -116,3 +117,22 @@
   background-color: #218838; /* Darker shade on hover */
   color: #fff; /* White text on hover */
 }
+
+.size-card {
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  font-size: large;
+}
+
+.size-card:hover {
+  transform: scale(1.1);
+  background-color: #3498db; /* Change the color to your desired hover color */
+}
+
+.product-image {
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-image:hover {
+  transform: scale(1.1);
+}
+

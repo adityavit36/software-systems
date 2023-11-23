@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'; // Import BrowserRouter, Route, and Switch
 import './App.css';
 import Header from './components/Header';
 import ProductList from './components/ProductList';
 import CartList from './components/CartList';
 import ProductDetail from './components/ProductDetail';
-import UserProfileModal from './components/UserProfileModal'; // Import UserProfileModal component
+import UserProfileModal from './components/UserProfileModal';
+import Footer from './components/Footer';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Import UserProfilePage (create this component)
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -86,8 +90,12 @@ function App() {
       {isUserProfileOpen && (
         <UserProfileModal user={userProfile} onClose={closeUserProfile} />
       )}
+
+      {/* Add the Footer component */}
+      <Footer />
     </div>
   );
+
 }
 
 export default App;

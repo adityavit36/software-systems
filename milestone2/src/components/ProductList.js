@@ -15,13 +15,13 @@ function ProductList({ products, addToCart, onSelectProduct }) {
               className="btn btn-success" // Add Bootstrap classes
               style={{ marginRight: '8px' }} // Add inline styles
             >
-              Add To Cart
+             <i className="fas fa-shopping-cart"></i> Add To Cart
             </button>
             <button
               onClick={() => onSelectProduct(product)}
               className="btn btn-primary" // Add Bootstrap classes
             >
-              View Details
+           <i className="fas fa-shopping-bag"></i>   View Details
             </button>
           </div>
         </div>
