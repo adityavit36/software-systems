@@ -1,5 +1,7 @@
 package com.example.registration.student;
 
+import com.example.registration.credentials.Credentials;
+import com.example.registration.credentials.CredentialsRepository;
 import com.example.registration.domain.Domain;
 import com.example.registration.domain.DomainRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -11,8 +13,11 @@ import java.util.List;
 @Configuration
 public class StudentConfig {
     @Bean
-    CommandLineRunner commandLineRunner(DomainRepository domainRepository, StudentRepository studentRepository){
+    CommandLineRunner commandLineRunner( CredentialsRepository credentialsRepository,DomainRepository domainRepository, StudentRepository studentRepository){
         return args->{
+            Credentials c1= new Credentials("root","root");
+            Credentials c2= new Credentials("admin","admin");
+            credentialsRepository.saveAll(List.of(c1,c2));
             Domain d1 = new Domain(1L,"MTech","CSE",60);
             Domain d2 = new Domain(2L,"MTech","ECE",60);
             Domain d3 = new Domain(3L,"IMTech","CSE",60);

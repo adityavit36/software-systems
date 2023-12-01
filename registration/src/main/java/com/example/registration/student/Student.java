@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -17,6 +17,7 @@ public class Student {
     private Long studentId; // Change "id" to "studentId"
     private String firstName; // Change "name" to "firstName"
     private String lastName; // Add "lastName" field
+    @Column(unique = true,nullable = false)
     private String email;
     private String photographPath; // Change "photoUrl" to "photographPath"
     private Integer graduationYear; // Change to Integer for the graduation year

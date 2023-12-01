@@ -31,4 +31,5 @@ public class Domain {
         this.batch = batch;
         this.capacity = capacity;
     }
+
 }

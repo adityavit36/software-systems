@@ -13,7 +13,7 @@ const StudentForm = () => {
     useEffect(() => { // Fetch the list of domains when the component mounts
         fetch('http://localhost:8080/api/students/domains')
             .then((response) => response.json())
-            .then((data) => setDomains(data))
+            .then((data) =>{ setDomains(data);setSelectedDomainId(data[0].domain_Id);})
             .catch((error) => console.error('Error fetching domains:', error));
     }, []);
 
@@ -28,9 +28,9 @@ const StudentForm = () => {
             [name]: type === 'file' ? e.target.files[0] : value,
         }));
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(selectedDomainId);
         console.log("Form data - ",e);
         try {
             const response = await fetch('http://localhost:8080/api/students/add', {
@@ -40,7 +40,7 @@ const StudentForm = () => {
                     'lastName': student.lastName,
                     'email': student.email,
                     'domain': domains.find(d=>d.domain_Id==selectedDomainId),
-                    'graduationYear': 2025,
+                    'graduationYear': student.graduationYear,
                     'photographPath': student.photographPath
                 }),
                 headers:{
@@ -58,7 +58,6 @@ const StudentForm = () => {
             console.error('Error:', error);
         }
     };
-
     return (
         <form onSubmit={handleSubmit} className="container mt-4">
             <div className="mb-3">
@@ -72,6 +71,10 @@ const StudentForm = () => {
             <div className="mb-3">
                 <label className="form-label">email</label>
                 <input type="text" className="form-control" name="email" value={student.email}onChange={handleChange}  />
+            </div>
+            <div className="mb-3">
+                <label className="form-label">graduationYear</label>
+                <input type="number" className="form-control" name="graduationYear" value={student.graduationYear}onChange={handleChange}  />
             </div>
             <div className="mb-3">
                 <label className="form-label">domain</label>

@@ -1,4 +1,5 @@
 package com.example.registration.student;
+import com.example.registration.credentials.Credentials;
 import com.example.registration.domain.Domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,10 @@ public class StudentController {
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
-    // Endpoint to create a new student
+    @PostMapping("/login")
+    public boolean login(@RequestBody Credentials credentials) {
+        return studentService.login(credentials);
+    }// Endpoint to create a new student
     @PostMapping("/add")
     public ResponseEntity<Student> addStudent(@RequestBody Student student) {
         Student savedStudent = studentService.saveStudent(student);
@@ -33,7 +37,6 @@ public class StudentController {
         List<Student> students = studentService.getAllStudents();
         return new ResponseEntity<>(students, HttpStatus.OK);
     } // Other controller methods...
-
     @GetMapping("/domains")
     public List<Domain> getDomains() {
         return studentService.getDomains();
