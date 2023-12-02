@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
-
 @Configuration
 public class StudentConfig {
     @Bean
@@ -27,8 +26,8 @@ public class StudentConfig {
             Domain d7 = new Domain(7L,"MS","CSE",60);
             Domain d8 = new Domain(8L,"MS","ECE",60);
             domainRepository.saveAll(List.of(d1,d2,d3,d4,d5,d6,d7,d8));
-            Student s1 = new Student(1L,"Aditya","Sharma","aditya@gmail.com","www.lorempicsum.com",2025,"MT2023021",d1);
-            Student s2 = new Student(2L,"Abhinav","Dhoka","abhinav@gmail.com","www.lorempicsum.com",2025,"MT2023062",d2);
+            Student s1 = new Student(1L,"Aditya","Sharma","aditya@gmail.com",new byte[0],2025,"MT2023021",d1);
+            Student s2 = new Student(2L,"Abhinav","Dhoka","abhinav@gmail.com",new byte[0],2025,"MT2023062",d2);
             studentRepository.saveAll(List.of(s1,s2));
         };
     }

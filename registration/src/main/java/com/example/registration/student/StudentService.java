@@ -21,13 +21,16 @@ public class StudentService {
     }
     public Student saveStudent(Student student) { // Implement the logic to save a student
         if (studentRepository.existsByEmail(student.getEmail())) {
-            // Handle duplicate entry (throw an exception, return null, etc.)
             return null;
         }
         if (student.getFirstName() == null || student.getLastName() == null || student.getPhotographPath() == null) {
-            // Handle the case where required fields are missing (throw an exception, return null, etc.)
             return null;
         }
+        if (!isValidEmail(student.getEmail()) || !isValidName(student.getFirstName()) || !isValidName(student.getLastName())) {
+            // Handle invalid name (throw an exception, return null, etc.)
+            return null;
+        }
+        // Validate email
         String rollNumber = generateUniqueRollNumber(student.getDomain(),student.getGraduationYear());
         student.setRollNumber(rollNumber);
         Optional<Domain> d = domainRepository.findById(student.getDomain().getDomain_Id());
@@ -37,6 +40,12 @@ public class StudentService {
         domainRepository.save(d.get());
         Optional<Domain> d1 = domainRepository.findById(student.getDomain().getDomain_Id());
         return studentRepository.save(student);
+    }
+    private boolean isValidName(String name) { // Check if the name contains only alphabets
+        return name != null && name.matches("^[a-zA-Z]+$");
+    }
+    private boolean isValidEmail(String email) { // Check if the email follows the pattern for @gmail.com addresses
+        return email != null && email.matches("^[a-zA-Z0-9._%+-]+@gmail\\.com$");
     }
     public Student getStudentById(Long id) { // Implement the logic to retrieve a student by ID
         return studentRepository.findById(id).orElse(null);

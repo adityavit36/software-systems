@@ -6,45 +6,59 @@ const StudentForm = () => {
         firstName: '',
         lastName: '',
         email: '',
-        photographPath: '',
+        graduationYear: '',
+        photographPath: '', // Combined with base64
     });
-    const [domains, setDomains] = useState([]); // State to store available domains
+
+    const [domains, setDomains] = useState([]);
     const [selectedDomainId, setSelectedDomainId] = useState(0);
-    useEffect(() => { // Fetch the list of domains when the component mounts
+
+    useEffect(() => {
         fetch('http://localhost:8080/api/students/domains')
             .then((response) => response.json())
-            .then((data) =>{ setDomains(data);setSelectedDomainId(data[0].domain_Id);})
+            .then((data) => { setDomains(data); setSelectedDomainId(data[0].domain_Id); })
             .catch((error) => console.error('Error fetching domains:', error));
     }, []);
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
-        // if (name === 'domain') {
-        //     const selectedDomain = domains.find((domain) => domain.program === value);
-        //     setSelectedDomainId(selectedDomain ? selectedDomain.domainId : null);
-        // }
         setStudent((prevStudent) => ({
             ...prevStudent,
             [name]: type === 'file' ? e.target.files[0] : value,
         }));
     };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                setStudent((prevStudent) => ({
+                    ...prevStudent,
+                    photographPath: event.target.result.split(',')[1],
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(selectedDomainId);
-        console.log("Form data - ",e);
+        console.log("Form data - ", student);
         try {
             const response = await fetch('http://localhost:8080/api/students/add', {
                 method: 'POST',
-                body:JSON.stringify ({
+                body: JSON.stringify({
                     'firstName': student.firstName,
                     'lastName': student.lastName,
                     'email': student.email,
-                    'domain': domains.find(d=>d.domain_Id==selectedDomainId),
+                    'domain': domains.find(d => d.domain_Id == selectedDomainId),
                     'graduationYear': student.graduationYear,
-                    'photographPath': student.photographPath
+                    'photographPath': student.photographPath, // Include base64 within photographPath
                 }),
-                headers:{
-                    'Content-type':'application/json;charset=UTF-8'
+                headers: {
+                    'Content-type': 'application/json;charset=UTF-8'
                 }
             });
 
@@ -58,6 +72,7 @@ const StudentForm = () => {
             console.error('Error:', error);
         }
     };
+
     return (
         <form onSubmit={handleSubmit} className="container mt-4">
             <div className="mb-3">
@@ -96,9 +111,8 @@ const StudentForm = () => {
                 </select>
             </div>
             <div className="mb-3">
-                <label className="form-label">photographPath</label>
-                {/* <input type="text" className="form-control" name="photographPath" value={student.photographPath} onChange={handleChange}/> */}
-                <input type="text" className="form-control" name="photographPath" onChange={handleChange}/>
+                <label className="form-label">Image</label>
+                <input type="file" className="form-control" name="image" onChange={handleImageChange} accept="image/*" />
             </div>
             <button type="submit" className="btn btn-primary">
                 Submit

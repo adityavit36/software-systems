@@ -19,7 +19,9 @@ public class Student {
     private String lastName; // Add "lastName" field
     @Column(unique = true,nullable = false)
     private String email;
-    private String photographPath; // Change "photoUrl" to "photographPath"
+    @Lob
+    @Column(name = "photographPath", columnDefinition = "BLOB")
+    private byte[] photographPath; // Change "photoUrl" to "photographPath"
     private Integer graduationYear; // Change to Integer for the graduation year
     private String rollNumber;
     @ManyToOne
